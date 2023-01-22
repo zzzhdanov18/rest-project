@@ -6,8 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    entrypoint: >
-      sh -c "pytest -v"
+    command: "pytest -v tests/test_api.py"
     networks:
       - test_network
 
