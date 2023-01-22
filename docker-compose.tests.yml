@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  fast-api-test:
+    container_name: fast-api-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: >
+      sh -c "pytest -v"
+    networks:
+      - test_network
+
+networks:
+  test_network:
+    external:
+      name: mynetwork
+
+
