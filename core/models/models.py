@@ -1,5 +1,5 @@
-from database import Base
-from sqlalchemy import String, Boolean, Integer, Column, ForeignKey
+from core.models.database import Base
+from sqlalchemy import String, Integer, Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 
 

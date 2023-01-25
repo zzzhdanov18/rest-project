@@ -6,13 +6,43 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: "pytest -v tests/test_api.py"
+    env_file:
+      - '.env'
+    environment:
+      - DATABASE_URL=${TEST_DATABASE_URL}
+    command: "pytest -v ./tests/test_api.py"
+    networks:
+      - test_network
+    links:
+      - test_db
+    depends_on:
+      test_db:
+        condition: service_healthy
+
+
+
+  test_db:
+    image: postgres:15.1-alpine
+    ports:
+      - "5433:5432"
+    restart: always
+    env_file:
+      - '.env'
+    environment:
+      - POSTGRES_PASSWORD=${TEST_POSTGRES_PASSWORD}
+      - POSTGRES_USER=${TEST_POSTGRES_USER}
+      - POSTGRES_DB=${TEST_POSTGRES_DB}
+      - POSTGRES_PORT=${TEST_POSTGRES_PORT}
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${TEST_POSTGRES_DB}", "-U", "${TEST_POSTGRES_USER}" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
     networks:
       - test_network
 
 networks:
   test_network:
-    external:
-      name: mynetwork
+      name: test_network
 
 
