@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-engine = create_engine(os.getenv("DATABASE_URL"), echo=True)
+engine = create_engine(os.getenv('DATABASE_URL'), echo=True)
 
 session_local = sessionmaker(bind=engine)
 
@@ -19,4 +19,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
