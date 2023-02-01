@@ -1,9 +1,9 @@
+from main import app
 from fastapi.testclient import TestClient
 import os.path
 import sys
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
-from main import app
 
 # include()
 
