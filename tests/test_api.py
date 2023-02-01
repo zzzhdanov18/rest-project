@@ -1,11 +1,9 @@
-from main import app
 from fastapi.testclient import TestClient
-import os.path
-import sys
+from setup import include
+from main import app
 
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-# include()
+include()
 
 client = TestClient(app)
 
