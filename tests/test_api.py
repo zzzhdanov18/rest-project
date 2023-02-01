@@ -1,10 +1,11 @@
+from fastapi.testclient import TestClient
 import os.path
 import sys
-from fastapi.testclient import TestClient
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
-
 from main import app
+
+# include()
 
 client = TestClient(app)
 
@@ -23,10 +24,7 @@ def test_get_empty_menus():
 
 def test_create_menu():
     global test_menu_id
-    created_menu = {
-        'title': 'My menu 1',
-        'description': 'My desc 1'
-    }
+    created_menu = {'title': 'My menu 1', 'description': 'My desc 1'}
     response = client.post(base_url, json=created_menu)
 
     test_menu_id = response.json()['id']
@@ -39,10 +37,8 @@ def test_create_menu():
 
 
 def test_update_menu():
-    updated_menu = {
-        'title': 'My updated menu 1',
-        'description': 'My updated desc 1'
-    }
+    updated_menu = {'title': 'My updated menu 1',
+                    'description': 'My updated desc 1'}
     url = f'{base_url}/{test_menu_id}'
     response = client.patch(url, json=updated_menu)
 
@@ -62,10 +58,7 @@ def test_get_empty_submenus():
 def test_create_submenu():
     global test_submenu_id
     url = f'{base_url}/{test_menu_id}/submenus'
-    create_submenu = {
-        'title': 'My submenu 1',
-        'description': 'My subdesc 1'
-    }
+    create_submenu = {'title': 'My submenu 1', 'description': 'My subdesc 1'}
 
     response = client.post(url, json=create_submenu)
     test_submenu_id = response.json()['id']
@@ -79,7 +72,7 @@ def test_update_submenu():
     url = f'{base_url}/{test_menu_id}/submenus/{test_submenu_id}'
     update_submenu = {
         'title': 'My updated submenu 1',
-        'description': 'My updated subdesc 1'
+        'description': 'My updated subdesc 1',
     }
 
     response = client.patch(url, json=update_submenu)
@@ -105,11 +98,8 @@ def test_get_empty_dishes():
 def test_create_dish():
     global test_dish_id
     url = f'{base_url}/{test_menu_id}/submenus/{test_submenu_id}/dishes'
-    create_dish = {
-        'title': 'My dish 1',
-        'description': 'My dish 1',
-        'price': '12.50'
-    }
+    create_dish = {'title': 'My dish 1',
+                   'description': 'My dish 1', 'price': '12.50'}
 
     response = client.post(url, json=create_dish)
     test_dish_id = response.json()['id']
@@ -124,7 +114,7 @@ def test_update_dish():
     update_dish = {
         'title': 'My updated dish 1',
         'description': 'My updated dish 1',
-        'price': '14.50'
+        'price': '14.50',
     }
 
     response = client.patch(url, json=update_dish)

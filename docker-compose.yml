@@ -11,6 +11,7 @@ services:
       - '.env'
     environment:
       - DATABASE_URL=${MAIN_DATABASE_URL}
+      - CACHE_HOST=${MAIN_CACHE_HOST}
     entrypoint: >
       sh -c "uvicorn main:app --host 0.0.0.0 --port 8000"
     links:
@@ -19,6 +20,8 @@ services:
       - "8000:8000"
     depends_on:
       db:
+        condition: service_healthy
+      redis_cache:
         condition: service_healthy
     networks:
       - mynetwork
@@ -39,6 +42,25 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT}
     healthcheck:
       test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    networks:
+      - mynetwork
+
+
+  redis_cache:
+    image: redis:latest
+    container_name: redis_cache
+    ports:
+      - "6379:6379"
+    restart: always
+    environment:
+      - REDIS_PORT=${REDIS_PORT}
+    expose:
+      - "6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
       timeout: 45s
       interval: 10s
       retries: 10

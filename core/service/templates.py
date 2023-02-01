@@ -22,6 +22,22 @@ class AbstractSessionContext(ABC):
         raise NotImplementedError
 
 
+class AbstractCache(ABC):
+    cache: Optional
+
+    @abstractmethod
+    def set(self, *args, **kwargs):
+        raise NotImplementedError
+
+    @abstractmethod
+    def delete(self, *args, **kwargs):
+        raise NotImplementedError
+
+    @abstractmethod
+    def get(self, *args, **kwargs):
+        raise NotImplementedError
+
+
 class AbstractCRUD(ABC):
 
     db: AbstractSessionContext
@@ -53,9 +69,11 @@ class AbstractCRUD(ABC):
 class AbstractService(ABC):
 
     crud_controller: AbstractCRUD
+    cache: AbstractCache
 
-    def __init__(self, crud_controller):
+    def __init__(self, crud_controller, cache):
         self.crud_controller = crud_controller
+        self.cache = cache
 
     @abstractmethod
     def get_list_of_items(self, *args, **kwargs):
@@ -75,4 +93,8 @@ class AbstractService(ABC):
 
     @abstractmethod
     def delete_item(self, *args, **kwargs):
+        raise NotImplementedError
+
+    @abstractmethod
+    def serialize_for_cache(self, *args, **kwargs):
         raise NotImplementedError
